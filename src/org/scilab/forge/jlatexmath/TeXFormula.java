@@ -856,9 +856,9 @@ public class TeXFormula {
     	treEd.keyTyped(this, root, c);
     }
     
-    public void formulaEditedKeyPressed(int keyCode)
+    public void formulaEditedKeyPressed(int keyCode, KeyEvent event)
     {
-    	treEd.keyPressed(this, keyCode);
+    	treEd.keyPressed(this, keyCode, event);
     }
     
     public Atom getRoot()

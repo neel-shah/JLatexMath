@@ -65,7 +65,7 @@ public class faltu
 
 			public void keyPressed(KeyEvent e) 
 			{
-				formula.formulaEditedKeyPressed(e.getKeyCode());
+				formula.formulaEditedKeyPressed(e.getKeyCode(), e);
 				if(e.getKeyCode() == 8)
 				{
 					icon = formula.createTeXIcon(TeXConstants.STYLE_DISPLAY, 50);
