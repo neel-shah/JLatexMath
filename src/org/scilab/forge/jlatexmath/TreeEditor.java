@@ -882,7 +882,6 @@ public class TreeEditor
 					this.formula.setRoot(r);
 				}
 				this.selAtom = e;
-				this.selAtom = selAtom;
 			}
 		}
 	}
