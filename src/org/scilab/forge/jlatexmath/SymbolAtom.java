@@ -31,6 +31,7 @@
 
 package org.scilab.forge.jlatexmath;
 
+import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Map;
 import java.io.FileInputStream;
@@ -41,6 +42,14 @@ import java.io.InputStream;
  * A box representing a symbol (a non-alphanumeric character).
  */
 public class SymbolAtom extends CharSymbol {
+	
+	private Atom treeParent = null;
+	ArrayList<Atom> children = new ArrayList<Atom>();
+	
+	private Atom parent = null;
+	private Atom nextSibling = null;
+	private Atom prevSibling = null;
+	private Atom subExpr = null;
     
     // whether it's is a delimiter symbol
     private final boolean delimiter;
@@ -49,10 +58,12 @@ public class SymbolAtom extends CharSymbol {
     private final String name;
     
     // contains all defined symbols
-    public static Map<String,SymbolAtom> symbols;
+    public static Map<String, SymbolAtom> symbols;
     
     // contains all the possible valid symbol types
     private static BitSet validSymbolTypes;
+
+    private char unicode;
     
     static {
         symbols = new TeXSymbolParser().readSymbols();
@@ -98,6 +109,15 @@ public class SymbolAtom extends CharSymbol {
 
         delimiter = del;
     }
+
+    public SymbolAtom setUnicode(char c) {
+	this.unicode = c;
+	return this;
+    }
+
+    public char getUnicode() {
+	return unicode;
+    }
     
     public static void addSymbolAtom(String file) {
 	FileInputStream in;
@@ -131,7 +151,11 @@ public class SymbolAtom extends CharSymbol {
         if (obj == null) // not found
             throw new SymbolNotFoundException(name);
         else
-            return (SymbolAtom) obj;
+        {
+        	SymbolAtom ob = (SymbolAtom) obj;
+        	SymbolAtom s = new SymbolAtom(ob, ob.type);
+            return s;
+        }
     }
     
     /**
@@ -150,7 +174,12 @@ public class SymbolAtom extends CharSymbol {
         TeXFont tf = env.getTeXFont();
         int style = env.getStyle();
 	Char c = tf.getChar(name, style);
-	CharBox cb = new CharBox(c);
+	Box cb = new CharBox(c);
+	if (env.getSmallCap() && unicode != 0 && Character.isLowerCase(unicode)) {
+	    try {
+		cb = new ScaleBox(new CharBox(tf.getChar(TeXFormula.symbolTextMappings[Character.toUpperCase(unicode)], style)), 0.8, 0.8);
+	    } catch (SymbolMappingNotFoundException e) { }
+	}
 
 	if (type == TeXConstants.TYPE_BIG_OPERATOR) {
 	    if (style < TeXConstants.STYLE_TEXT && tf.hasNextLarger(c))
@@ -170,4 +199,70 @@ public class SymbolAtom extends CharSymbol {
         // style doesn't matter here
         return tf.getChar(name, TeXConstants.STYLE_DISPLAY).getCharFont();
     }
+
+	@Override
+	public void setTreeParent(Atom at) 
+	{
+		this.treeParent = at;
+	}
+
+	@Override
+	public Atom getTreeParent()
+	{
+		return this.treeParent;
+	}
+
+	@Override
+	public void setChildren(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setParent(Atom at)
+	{
+	this.parent = at;	
+	}
+
+	@Override
+	public Atom getParent()
+	{
+		return this.parent;
+	}
+
+	@Override
+	public void setNextSibling(Atom at)
+	{
+		this.nextSibling = at;
+	}
+
+	@Override
+	public Atom getNextSibling()
+	{
+		return this.nextSibling;
+	}
+
+	@Override
+	public void setPrevSibling(Atom at)
+	{
+		this.prevSibling = at;
+	}
+
+	@Override
+	public Atom getPrevSibling() 
+	{
+		return this.prevSibling;
+	}
+
+	@Override
+	public void setSubExpr(Atom at)
+	{
+		this.subExpr = at;
+	}
+
+	@Override
+	public Atom getSubExpr()
+	{
+		return this.subExpr;
+	}
 }

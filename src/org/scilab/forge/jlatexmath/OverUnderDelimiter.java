@@ -71,28 +71,96 @@ public class OverUnderDelimiter extends Atom {
 	Box del = DelimiterFactory.create(symbol.getName(), env, b.getWidth());
 	
 	Box scriptBox = null;
-	if (script != null)
+	if (script != null) {
 	    scriptBox = script.createBox((over ? env.supStyle() : env.subStyle()));
-	
-	// create centered horizontal box if smaller dan maximum width
+	}
+
+	// create centered horizontal box if smaller than maximum width
 	float max = getMaxWidth(b, del, scriptBox);
-	if (Math.abs(max - b.getWidth()) > TeXFormula.PREC)
+	if (max - b.getWidth() > TeXFormula.PREC) {
 	    b = new HorizontalBox(b, max, TeXConstants.ALIGN_CENTER);
-	
+	}
+
 	del = new VerticalBox(del, max, TeXConstants.ALIGN_CENTER);
-	if (scriptBox != null
-            && Math.abs(max - scriptBox.getWidth()) > TeXFormula.PREC)
-	    scriptBox = new HorizontalBox(scriptBox, max,
-					  TeXConstants.ALIGN_CENTER);
-	
-	return new OverUnderBox(b, del, scriptBox, kern.createBox(env)
-				.getHeight(), over);
+	if (scriptBox != null && max - scriptBox.getWidth() > TeXFormula.PREC) {
+	    scriptBox = new HorizontalBox(scriptBox, max, TeXConstants.ALIGN_CENTER);
+	}
+
+	return new OverUnderBox(b, del, scriptBox, kern.createBox(env).getHeight(), over);
     }
     
     private static float getMaxWidth(Box b, Box del, Box script) {
 	float max = Math.max(b.getWidth(), del.getHeight() + del.getDepth());
-	if (script != null)
+	if (script != null) {
 	    max = Math.max(max, script.getWidth());
+	}
+
 	return max;
     }
+
+	@Override
+	public void setTreeParent(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getTreeParent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setChildren(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setParent(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getParent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setNextSibling(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getNextSibling() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setPrevSibling(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getPrevSibling() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setSubExpr(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getSubExpr() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

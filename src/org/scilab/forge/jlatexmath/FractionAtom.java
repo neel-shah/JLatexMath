@@ -29,11 +29,21 @@
 
 package org.scilab.forge.jlatexmath;
 
+import java.util.ArrayList;
+
 /**
  * An atom representing a fraction.
  */
 public class FractionAtom extends Atom {
     
+	private Atom treeParent = null;
+	ArrayList<Atom> children = new ArrayList<Atom>();
+	
+	private Atom parent = null;
+	private Atom nextSibling = null;
+	private Atom prevSibling = null;
+	private Atom subExpr = null;
+	
     // whether the default thickness should not be used for the fraction line
     private boolean noDefault = false;
     
@@ -176,13 +186,15 @@ public class FractionAtom extends Atom {
     }
     
     public Box createBox(TeXEnvironment env) {
+    	this.setTreeRelation();
+    	this.setArrowRelation();
         TeXFont tf = env.getTeXFont();
         int style = env.getStyle();
         // set thickness to default if default value should be used
         float drt = tf.getDefaultRuleThickness(style);
         if (noDefault)
             // convert the thickness to pixels
-            thickness = new SpaceAtom(unit, 0, thickness, 0).createBox(env).getHeight();
+	    thickness *= SpaceAtom.getFactor(unit, env); 
         else
             thickness = (defFactorSet ? defFactor * drt : drt);
         
@@ -269,4 +281,114 @@ public class FractionAtom extends Atom {
         vBox.setDepth(shiftDown + denom.getDepth());
         return vBox;
     }
+
+    public void setTreeRelation()
+    {
+    	if(children != null)
+    		children.clear();
+    	children.add(numerator);
+    	children.add(denominator);
+    	numerator.setTreeParent(this);
+    	denominator.setTreeParent(this);
+    }
+    
+    public void setArrowRelation()
+    {
+    	this.setSubExpr(numerator);
+    	numerator.setParent(this);
+    	numerator.setNextSibling(denominator);
+    	numerator.setPrevSibling(this);
+    	denominator.setParent(numerator);
+    	denominator.setNextSibling(this);
+    	denominator.setPrevSibling(numerator);
+    	if(numerator instanceof CharAtom || numerator instanceof SymbolAtom)
+    		numerator.setSubExpr(denominator);
+    }
+    
+	@Override
+	public void setTreeParent(Atom at) 
+	{
+		this.treeParent = at;
+	}
+
+	@Override
+	public Atom getTreeParent()
+	{
+		return this.treeParent;
+	}
+
+	@Override
+	public void setChildren(Atom at)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setParent(Atom at)
+	{
+		this.parent = at;
+	}
+
+	@Override
+	public Atom getParent()
+	{
+		return this.parent;
+	}
+
+	@Override
+	public void setNextSibling(Atom at)
+	{
+		this.nextSibling = at;
+	}
+
+	@Override
+	public Atom getNextSibling() 
+	{
+		return this.nextSibling;
+	}
+
+	@Override
+	public void setPrevSibling(Atom at)
+	{
+		this.prevSibling = at;
+	}
+
+	@Override
+	public Atom getPrevSibling()
+	{
+		return this.prevSibling;
+	}
+
+	@Override
+	public void setSubExpr(Atom at)
+	{
+		this.subExpr = at;
+	}
+
+	@Override
+	public Atom getSubExpr() 
+	{
+		return this.subExpr;
+	}
+	
+	public Atom getNum()
+	{
+		return this.numerator;
+	}
+	
+	public Atom getDenom()
+	{
+		return this.denominator;
+	}
+	
+	public void setNum(Atom at)
+	{
+		this.numerator = at;
+	}
+	
+	public void setDenom(Atom at)
+	{
+		this.denominator = at;
+	}
 }

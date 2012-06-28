@@ -40,22 +40,98 @@ public class LaTeXAtom extends Atom {
     public Box createBox(TeXEnvironment env) {
 	env = env.copy(env.getTeXFont().copy());
 	env.getTeXFont().setRoman(true);
+	float sc = env.getTeXFont().getScaleFactor();
+
+        TeXFormula.FontInfos fontInfos = TeXFormula.externalFontMap.get(Character.UnicodeBlock.BASIC_LATIN);
+        if (fontInfos != null) {
+            TeXFormula.externalFontMap.put(Character.UnicodeBlock.BASIC_LATIN, null);
+        }
 	RowAtom rat = (RowAtom)((RomanAtom)new TeXFormula("\\mathrm{XETL}").root).base;
+        if (fontInfos != null) {
+            TeXFormula.externalFontMap.put(Character.UnicodeBlock.BASIC_LATIN, fontInfos);
+        }
+
 	HorizontalBox hb = new HorizontalBox(rat.getLastAtom().createBox(env));
-	hb.add(new SpaceAtom(TeXConstants.UNIT_EM, -0.7f, 0, 0).createBox(env));
-	float f = new SpaceAtom(TeXConstants.UNIT_EX, 0.45f, 0, 0).createBox(env).getWidth();
-	float f1 = new SpaceAtom(TeXConstants.UNIT_EX, 0.45f, 0, 0).createBox(env).getWidth();
+	hb.add(new SpaceAtom(TeXConstants.UNIT_EM, -0.7f * sc, 0, 0).createBox(env));
+	float f = new SpaceAtom(TeXConstants.UNIT_EX, 0.45f * sc, 0, 0).createBox(env).getWidth();
+	float f1 = new SpaceAtom(TeXConstants.UNIT_EX, 0.45f * sc, 0, 0).createBox(env).getWidth();
 	CharBox A = new CharBox(env.getTeXFont().getChar('A', "mathnormal", env.supStyle().getStyle()));
 	A.setShift(-f);
 	hb.add(A);
-	hb.add(new SpaceAtom(TeXConstants.UNIT_EM, -0.2f, 0, 0).createBox(env));
+	hb.add(new SpaceAtom(TeXConstants.UNIT_EM, -0.2f * sc, 0, 0).createBox(env));
 	hb.add(rat.getLastAtom().createBox(env));
-	hb.add(new SpaceAtom(TeXConstants.UNIT_EM, -0.5f, 0, 0).createBox(env));
+	hb.add(new SpaceAtom(TeXConstants.UNIT_EM, -0.5f * sc, 0, 0).createBox(env));
 	Box E = rat.getLastAtom().createBox(env);
 	E.setShift(f1);
 	hb.add(E);
-	hb.add(new SpaceAtom(TeXConstants.UNIT_EM, -0.25f, 0, 0).createBox(env));
+	hb.add(new SpaceAtom(TeXConstants.UNIT_EM, -0.25f * sc, 0, 0).createBox(env));
 	hb.add(rat.getLastAtom().createBox(env));
 	return hb;
-    } 
+    }
+
+	@Override
+	public void setTreeParent(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getTreeParent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setChildren(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setParent(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getParent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setNextSibling(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getNextSibling() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setPrevSibling(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getPrevSibling() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setSubExpr(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getSubExpr() {
+		// TODO Auto-generated method stub
+		return null;
+	} 
 }

@@ -32,45 +32,101 @@ package org.scilab.forge.jlatexmath;
  * An atom with a cedilla.
  */
 public class CedillaAtom extends Atom {
-    
+
     private Atom base;
 
     public CedillaAtom(Atom base) {
-	this.base = base;
+        this.base = base;
     }
-    
-    /*public Box createBox(TeXEnvironment env) {
-	Box b = base.createBox(env);
-	VerticalBox vb = new VerticalBox();
-	vb.add(b);
-	vb.add(cedilla.createBox(env));
-	float f = vb.getHeight() + vb.getDepth();
-	vb.setHeight(b.getHeight());
-	vb.setDepth(f - b.getHeight());
-	return vb;
-	} */
 
     public Box createBox(TeXEnvironment env) {
-	Box b = base.createBox(env);
-	VerticalBox vb = new VerticalBox();
-	vb.add(b);
-	Char ch = env.getTeXFont().getChar("jlatexmathcedilla", env.getStyle());
-	float italic = ch.getItalic();
-	Box cedilla = new CharBox(ch);
-	Box y;
-	if (Math.abs(italic) > TeXFormula.PREC) {
+        Box b = base.createBox(env);
+        VerticalBox vb = new VerticalBox();
+        vb.add(b);
+        Char ch = env.getTeXFont().getChar("jlatexmathcedilla", env.getStyle());
+        float italic = ch.getItalic();
+        Box cedilla = new CharBox(ch);
+        Box y;
+        if (Math.abs(italic) > TeXFormula.PREC) {
             y = new HorizontalBox(new StrutBox(-italic, 0, 0, 0));
             y.add(cedilla);
-        } else
+        } else {
             y = cedilla;
+        }
 
-	Box ce = new HorizontalBox(y, b.getWidth(), TeXConstants.ALIGN_CENTER);
-	float x = new SpaceAtom(TeXConstants.UNIT_MU, 0.4f, 0, 0).createBox(env).getWidth();
-	vb.add(new StrutBox(0, -x, 0, 0));
-	vb.add(ce);
-	float f = vb.getHeight() + vb.getDepth();
-	vb.setHeight(b.getHeight());
-	vb.setDepth(f - b.getHeight());
-	return vb;
-    } 
+        Box ce = new HorizontalBox(y, b.getWidth(), TeXConstants.ALIGN_CENTER);
+        float x = 0.4f * SpaceAtom.getFactor(TeXConstants.UNIT_MU, env);
+        vb.add(new StrutBox(0, -x, 0, 0));
+        vb.add(ce);
+        float f = vb.getHeight() + vb.getDepth();
+        vb.setHeight(b.getHeight());
+        vb.setDepth(f - b.getHeight());
+        return vb;
+    }
+
+	@Override
+	public void setTreeParent(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getTreeParent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setChildren(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setParent(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getParent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setNextSibling(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getNextSibling() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setPrevSibling(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getPrevSibling() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setSubExpr(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getSubExpr() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

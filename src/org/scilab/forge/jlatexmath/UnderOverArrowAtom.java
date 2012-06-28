@@ -54,14 +54,17 @@ public class UnderOverArrowAtom extends Atom {
 	TeXFont tf = env.getTeXFont();
         int style = env.getStyle();
 	Box b = base != null ? base.createBox(env) : new StrutBox(0, 0, 0, 0);
-	float sep = new SpaceAtom(TeXConstants.UNIT_MU, 2f, 0, 0).createBox(env).getWidth();
+	float sep = new SpaceAtom(TeXConstants.UNIT_POINT, 1f, 0, 0).createBox(env).getWidth();
 	Box arrow;
 
-	if (dble)
+	if (dble) {
 	    arrow = XLeftRightArrowFactory.create(env, b.getWidth());
-	else 
+	    sep = 4 * sep;
+	} else {
 	    arrow = XLeftRightArrowFactory.create(left, env, b.getWidth());
-	    
+	    sep = -sep;
+	}
+
 	VerticalBox vb = new VerticalBox();
 	if (over) {
 	    vb.add(arrow);
@@ -81,4 +84,70 @@ public class UnderOverArrowAtom extends Atom {
 	return vb;
 	
     }
+
+	@Override
+	public void setTreeParent(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getTreeParent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setChildren(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setParent(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getParent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setNextSibling(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getNextSibling() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setPrevSibling(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getPrevSibling() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setSubExpr(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getSubExpr() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -29,48 +29,146 @@
 
 package org.scilab.forge.jlatexmath;
 
+import java.util.ArrayList;
+
 /**
  * An atom representing exactly one alphanumeric character and the text style in which 
  * it should be drawn. 
  */
 public class CharAtom extends CharSymbol {
+	
+	private Atom treeParent = null;
+	ArrayList<Atom> children = new ArrayList<Atom>();
+	
+	private Atom parent = null;
+	private Atom nextSibling = null;
+	private Atom prevSibling = null;
+	private Atom subExpr = null;
 
-   // alphanumeric character
-   private final char c;
+    // alphanumeric character
+    private final char c;
+    
+    // text style (null means the default text style)
+    private String textStyle;
 
-   // text style (null means the default text style)
-   private final String textStyle;
+    /**
+     * Creates a CharAtom that will represent the given character in the given text style.
+     * Null for the text style means the default text style.
+     * 
+     * @param c the alphanumeric character
+     * @param textStyle the text style in which the character should be drawn
+     */
+    public CharAtom(char c, String textStyle) {
+	this.c = c;
+	this.textStyle = textStyle;
+    }
 
-   /**
-    * Creates a CharAtom that will represent the given character in the given text style.
-    * Null for the text style means the default text style.
-    * 
-    * @param c the alphanumeric character
-    * @param textStyle the text style in which the character should be drawn
-    */
-   public CharAtom(char c, String textStyle) {
-      this.c = c;
-      this.textStyle = textStyle;
-   }
+    public Box createBox(TeXEnvironment env) {
+	if (textStyle == null) {
+	    String ts = env.getTextStyle();
+	    if (ts != null) {
+		textStyle = ts;
+	    }
+	}
+	boolean smallCap = env.getSmallCap();
+	Char ch = getChar(env.getTeXFont(), env.getStyle(), smallCap);
+	Box box = new CharBox(ch);
+	if (smallCap && Character.isLowerCase(c)) {
+	    // We have a small capital
+	    box = new ScaleBox(box, 0.8f, 0.8f);
+	}
+	
+	return box;
+    }
 
-   public Box createBox(TeXEnvironment env) {
-      Char ch = getChar(env.getTeXFont(), env.getStyle());
-      return new CharBox(ch);
-   }
+    public char getCharacter() {
+	return c;
+    }
 
-   /*
-    * Get the Char-object representing this character ("c") in the right text style
-    */
-   private Char getChar(TeXFont tf, int style) {
-      if (textStyle == null) // default text style
-         return tf.getDefaultChar(c, style);
-      else
-         return tf.getChar(c, textStyle, style);
-   }
+    /*
+     * Get the Char-object representing this character ("c") in the right text style
+     */
+    private Char getChar(TeXFont tf, int style, boolean smallCap) {
+	char chr = c;
+	if (smallCap) {
+	    if (Character.isLowerCase(c)) {
+		chr = Character.toUpperCase(c);
+	    }
+	}
+	if (textStyle == null) {
+	    return tf.getDefaultChar(chr, style);
+	} else {
+	    return tf.getChar(chr, textStyle, style);
+	}
+    }
 
-   public CharFont getCharFont(TeXFont tf) {
-      // style doesn't matter here 
-      return getChar(tf, TeXConstants.STYLE_DISPLAY).getCharFont();
-   }
+    public CharFont getCharFont(TeXFont tf) {
+	return getChar(tf, TeXConstants.STYLE_DISPLAY, false).getCharFont();
+    }
 
+	@Override
+	public void setTreeParent(Atom at) 
+	{
+		this.treeParent = at;
+	}
+
+	@Override
+	public Atom getTreeParent()
+	{
+		return this.treeParent;
+	}
+
+	@Override
+	public void setChildren(Atom at)
+	{
+		
+	}
+
+	@Override
+	public void setParent(Atom at) 
+	{
+		this.parent = at;
+	}
+
+	@Override
+	public Atom getParent()
+	{
+		return this.parent;
+	}
+
+	@Override
+	public void setNextSibling(Atom at) 
+	{
+		this.nextSibling = at;
+	}
+
+	@Override
+	public Atom getNextSibling()
+	{
+		return this.nextSibling;
+	}
+
+	@Override
+	public void setPrevSibling(Atom at)
+	{
+		this.prevSibling = at;
+	}
+
+	@Override
+	public Atom getPrevSibling()
+	{
+		return this.prevSibling;
+	}
+
+	@Override
+	public void setSubExpr(Atom at)
+	{
+		this.subExpr = at;
+	}
+
+	@Override
+	public Atom getSubExpr()
+	{
+		return this.subExpr;
+	}
 }

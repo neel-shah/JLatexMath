@@ -30,6 +30,7 @@ package org.scilab.forge.jlatexmath.dynamic;
 
 import org.scilab.forge.jlatexmath.Atom;
 import org.scilab.forge.jlatexmath.Box;
+import org.scilab.forge.jlatexmath.EmptyAtom;
 import org.scilab.forge.jlatexmath.StrutBox;
 import org.scilab.forge.jlatexmath.TeXEnvironment;
 import org.scilab.forge.jlatexmath.TeXFormula;
@@ -46,11 +47,16 @@ public class DynamicAtom extends Atom {
     private ExternalConverter converter;
     private TeXFormula formula = new TeXFormula();
     private String externalCode;
-    
-    public DynamicAtom(String externalCode) {
+    private boolean insert;
+    private boolean refreshed;
+
+    public DynamicAtom(String externalCode, String option) {
 	this.externalCode = externalCode;
 	if (ecFactory != null) {
 	    this.converter = ecFactory.getExternalConverter();
+	}
+	if (option != null && option.equals("i")) {
+	    insert = true;
 	}
     }
 
@@ -62,11 +68,101 @@ public class DynamicAtom extends Atom {
 	ecFactory = factory;
     }
 
+    public boolean getInsertMode() {
+	return insert;
+    }
+
+    public Atom getAtom() {
+	if (!refreshed) {
+	    formula.setLaTeX(converter.getLaTeXString(externalCode));
+	    refreshed = true;
+	}
+	
+	if (formula.root == null) {
+	    return new EmptyAtom();
+	}
+
+	return formula.root;
+    }
+
     public Box createBox(TeXEnvironment env) {
 	if (converter != null) {
-	    formula.setLaTeX(converter.getLaTeXString(externalCode));
-	    return formula.root.createBox(env);
+	    if (refreshed) {
+		refreshed = false;
+	    } else {
+		formula.setLaTeX(converter.getLaTeXString(externalCode));
+	    }
+	    if (formula.root != null) {
+		return formula.root.createBox(env);
+	    }
 	}
+
 	return new StrutBox(0, 0, 0, 0);
     }
+
+	@Override
+	public void setTreeParent(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getTreeParent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setChildren(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setParent(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getParent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setNextSibling(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getNextSibling() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setPrevSibling(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getPrevSibling() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setSubExpr(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getSubExpr() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

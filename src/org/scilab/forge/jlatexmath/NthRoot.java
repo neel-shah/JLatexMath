@@ -29,27 +29,39 @@
 
 package org.scilab.forge.jlatexmath;
 
+import java.util.ArrayList;
+
 /**
  * An atom representing an nth-root construction.
  */
 public class NthRoot extends Atom {
-
+	
+	private Atom treeParent = null;
+	ArrayList<Atom> children = new ArrayList<Atom>();
+	
+	private Atom parent = null;
+	private Atom nextSibling = null;
+	private Atom prevSibling = null;
+	private Atom subExpr = null;
+	
     private static final String sqrtSymbol = "sqrt";
     
     private static final float FACTOR = 0.55f;
     
     // base atom to be put under the root sign
-    private final Atom base;
+    private Atom base;
     
     // root atom to be put in the upper left corner above the root sign
-    private final Atom root;
+    private Atom root;
     
     public NthRoot(Atom base, Atom root) {
-	this.base = base;
-	this.root = root;
+	this.base = base == null ? new EmptyAtom() : base;
+	this.root = root == null ? new EmptyAtom() : root;
     }
     
     public Box createBox(TeXEnvironment env) {
+    	this.setTreeRelation();
+    	this.setArrowRelation();
 	// first create a simple square root construction
 	
 	TeXFont tf = env.getTeXFont();
@@ -108,4 +120,124 @@ public class NthRoot extends Atom {
 	    return res;
 	} 
     }
+    
+    public void setTreeRelation()
+    {
+    	if(children != null)
+    		children.clear();
+    	children.add(base);
+    	base.setTreeParent(this);
+    	if(root != null)
+    	{
+    		children.add(root);
+    		root.setTreeParent(this);
+    	}
+    }
+    
+    public void setArrowRelation()
+    {
+    	if(root == null)
+    	{
+    		this.setSubExpr(base);
+    		base.setParent(this);
+    		base.setNextSibling(this);
+    		base.setPrevSibling(this);
+    	}
+    	else
+    	{
+    		this.setSubExpr(root);
+    		base.setParent(root);
+    		base.setPrevSibling(root);
+    		base.setNextSibling(this);
+    		root.setParent(this);
+    		root.setPrevSibling(this);
+    		root.setNextSibling(base);
+    	}
+    }
+
+	@Override
+	public void setTreeParent(Atom at) 
+	{
+		this.treeParent = at;
+	}
+
+	@Override
+	public Atom getTreeParent() 
+	{
+		return this.treeParent;
+	}
+
+	@Override
+	public void setChildren(Atom at)
+	{
+
+	}
+
+	@Override
+	public void setParent(Atom at)
+	{
+		this.parent = at;
+	}
+
+	@Override
+	public Atom getParent()
+	{
+		return this.parent;
+	}
+
+	@Override
+	public void setNextSibling(Atom at) 
+	{
+		this.nextSibling = at;
+	}
+
+	@Override
+	public Atom getNextSibling() 
+	{
+		return this.nextSibling;
+	}
+
+	@Override
+	public void setPrevSibling(Atom at)
+	{
+		this.prevSibling = at;
+	}
+
+	@Override
+	public Atom getPrevSibling()
+	{
+		return this.prevSibling;
+	}
+
+	@Override
+	public void setSubExpr(Atom at)
+	{
+		this.subExpr = at;
+	}
+
+	@Override
+	public Atom getSubExpr()
+	{
+		return this.subExpr;
+	}
+	
+	public Atom getBase()
+	{
+		return base;
+	}
+	
+	public void setBase(Atom at)
+	{
+		this.base = at;
+	}
+	
+	public Atom getRoot()
+	{
+		return this.root;
+	}
+	
+	public void setRoot(Atom at)
+	{
+		this.root = at;
+	}
 }

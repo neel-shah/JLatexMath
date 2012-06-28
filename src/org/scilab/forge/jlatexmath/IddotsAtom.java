@@ -33,13 +33,12 @@ package org.scilab.forge.jlatexmath;
  */
 public class IddotsAtom extends Atom {
 
-    public IddotsAtom() {
-    }
+    public IddotsAtom() { }
     
     public Box createBox(TeXEnvironment env) {
-	Box ldots = new TeXFormula("\\ldots").root.createBox(env);
+	Box ldots = TeXFormula.get("ldots").root.createBox(env);
 	float w = ldots.getWidth();
-	Box dot = new TeXFormula("\\ldotp").root.createBox(env);
+	Box dot = SymbolAtom.get("ldotp").createBox(env);
 	HorizontalBox hb1 = new HorizontalBox(dot, w, TeXConstants.ALIGN_RIGHT);
 	HorizontalBox hb2 = new HorizontalBox(dot, w, TeXConstants.ALIGN_CENTER);
 	HorizontalBox hb3 = new HorizontalBox(dot, w, TeXConstants.ALIGN_LEFT);
@@ -56,5 +55,71 @@ public class IddotsAtom extends Atom {
 	vb.setDepth(0);
 
 	return vb;
-    }  
+    }
+
+	@Override
+	public void setTreeParent(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getTreeParent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setChildren(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setParent(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getParent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setNextSibling(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getNextSibling() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setPrevSibling(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getPrevSibling() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setSubExpr(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getSubExpr() {
+		// TODO Auto-generated method stub
+		return null;
+	}  
 }

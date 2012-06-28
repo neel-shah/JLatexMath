@@ -198,6 +198,9 @@ public class DefaultTeXFontParser {
     }
     
     public FontInfo[] parseFontDescriptions(FontInfo[] fi, InputStream file, String name) throws ResourceParseException {
+	if (file == null) {
+	    return fi;
+	}
         ArrayList<FontInfo> res = new ArrayList<FontInfo>(Arrays.asList(fi));
 	Element font;
 	try {
@@ -347,7 +350,7 @@ public class DefaultTeXFontParser {
 
     public static Font createFont(InputStream fontIn, String name) throws ResourceParseException {
         try {
-            Font f = Font.createFont(Font.TRUETYPE_FONT, fontIn);
+            Font f = Font.createFont(Font.TRUETYPE_FONT, fontIn).deriveFont(TeXFormula.PIXELS_PER_POINT);
 	    GraphicsEnvironment graphicEnv = GraphicsEnvironment.getLocalGraphicsEnvironment();
 	    /**
 	     * The following fails under java 1.5
@@ -357,7 +360,7 @@ public class DefaultTeXFontParser {
 	    if (shouldRegisterFonts) {
 		try {
 		    Method registerFontMethod = graphicEnv.getClass().getMethod("registerFont", new Class[] { Font.class });
-		    if ((Boolean)registerFontMethod.invoke(graphicEnv, new Object[] { f }) == Boolean.FALSE) {
+		    if ((Boolean) registerFontMethod.invoke(graphicEnv, new Object[] { f }) == Boolean.FALSE) {
 			System.err.println("Cannot register the font " + f.getFontName());
 		    }
 		} catch (Exception ex) {

@@ -40,16 +40,22 @@ public class MultlineAtom extends Atom {
     
     private ArrayOfAtoms column;
     private int type;
+    private boolean isPartial;
+
+    public MultlineAtom(boolean isPartial, ArrayOfAtoms column, int type) {
+        this.isPartial = isPartial;
+	this.column = column;
+	this.type = type;
+    }
 
     public MultlineAtom(ArrayOfAtoms column, int type) {
-        this.column = column;
-	this.type = type;
+        this(false, column, type);
     }
     
     public Box createBox(TeXEnvironment env) {
 	float tw = env.getTextwidth();
 	if (tw == Float.POSITIVE_INFINITY || type == GATHERED) {
-	    return new MatrixAtom(column, "").createBox(env);
+	    return new MatrixAtom(isPartial, column, "").createBox(env);
 	}
 
 	VerticalBox vb = new VerticalBox();
@@ -86,4 +92,70 @@ public class MultlineAtom extends Atom {
 
 	return vb;
     }
+
+	@Override
+	public void setTreeParent(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getTreeParent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setChildren(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setParent(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getParent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setNextSibling(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getNextSibling() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setPrevSibling(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getPrevSibling() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setSubExpr(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getSubExpr() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

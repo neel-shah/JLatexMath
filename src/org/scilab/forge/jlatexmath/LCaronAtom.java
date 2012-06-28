@@ -40,7 +40,7 @@ public class LCaronAtom extends Atom {
     }
     
     public Box createBox(TeXEnvironment env) {
-	CharBox A = new CharBox(env.getTeXFont().getChar("jlatexmathapos", env.getStyle()));
+	CharBox A = new CharBox(env.getTeXFont().getChar("textapos", env.getStyle()));
 	CharBox L = new CharBox(env.getTeXFont().getChar(upper ? 'L' : 'l', "mathnormal", env.getStyle()));
 	HorizontalBox hb = new HorizontalBox(L);
 	if (upper) 
@@ -49,5 +49,71 @@ public class LCaronAtom extends Atom {
 	    hb.add(new SpaceAtom(TeXConstants.UNIT_EM, -0.3f, 0, 0).createBox(env));
 	hb.add(A);
 	return hb;
-    } 
+    }
+
+	@Override
+	public void setTreeParent(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getTreeParent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setChildren(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setParent(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getParent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setNextSibling(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getNextSibling() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setPrevSibling(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getPrevSibling() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setSubExpr(Atom at) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Atom getSubExpr() {
+		// TODO Auto-generated method stub
+		return null;
+	} 
 }

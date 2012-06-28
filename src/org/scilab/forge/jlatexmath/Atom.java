@@ -100,4 +100,24 @@ public abstract class Atom implements Cloneable {
 	    return null;
 	}
     }
+    
+    /**
+     * A tree that should be maintained (which is very much similar to MathML) to turn 
+     * JLaTeXMath into WYSIWYG
+     */
+    public abstract void setTreeParent(Atom at);
+    public abstract Atom getTreeParent();
+    public abstract void setChildren(Atom at);
+    
+    /**
+     * Keeps record for which Atom to move on if user presses an Arrow key
+     */
+    public abstract void setParent(Atom at);
+    public abstract Atom getParent();
+    public abstract void setNextSibling(Atom at);
+    public abstract Atom getNextSibling();
+    public abstract void setPrevSibling(Atom at);
+    public abstract Atom getPrevSibling();
+    public abstract void setSubExpr(Atom at);
+    public abstract Atom getSubExpr();
 }

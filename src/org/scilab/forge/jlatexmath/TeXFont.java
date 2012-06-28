@@ -37,9 +37,6 @@ package org.scilab.forge.jlatexmath;
  */
 public interface TeXFont {
     
-    // point-to-pixel conversion
-    public static final float PIXELS_PER_POINT = 1f;
-    
     public static final int NO_FONT = -1;
     
     /**
@@ -49,7 +46,11 @@ public interface TeXFont {
      * @return a <b>copy</b> of this {@link TeXFont} with the new size
      */
     public TeXFont deriveFont(float pointSize);
-    
+
+    public TeXFont scaleFont(float factor);
+
+    public float getScaleFactor();
+
     public float getAxisHeight(int style);
     
     public float getBigOpSpacing1(int style);

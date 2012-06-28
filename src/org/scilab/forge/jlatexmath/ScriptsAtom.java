@@ -31,20 +31,30 @@
 
 package org.scilab.forge.jlatexmath;
 
+import java.util.ArrayList;
+
 /**
  * An atom representing scripts to be attached to another atom.
  */
 public class ScriptsAtom extends Atom {
     
+	private Atom treeParent = null;
+	ArrayList<Atom> children = new ArrayList<Atom>();
+	
+	private Atom parent = null;
+	private Atom nextSibling = null;
+	private Atom prevSibling = null;
+	private Atom subExpr = null;
+	
     // TeX constant: what's the use???
     private final static SpaceAtom SCRIPT_SPACE = new SpaceAtom(TeXConstants.UNIT_POINT, 0.5f, 0, 0);
     
     // base atom
-    private final Atom base;
+    private Atom base;
     
     // subscript and superscript to be attached to the base (if not null)
     private final Atom subscript;
-    private final Atom superscript;
+    private Atom superscript;
     private int align = TeXConstants.ALIGN_LEFT;
     
     public ScriptsAtom(Atom base, Atom sub, Atom sup) {
@@ -60,6 +70,8 @@ public class ScriptsAtom extends Atom {
     }
     
     public Box createBox(TeXEnvironment env) {
+    	this.setTreeRelations();
+    	this.setArrowRelations();
 	Box b = (base == null ? new StrutBox(0, 0, 0, 0) : base.createBox(env));
         Box deltaSymbol = new StrutBox(0, 0, 0, 0);
 	if (subscript == null && superscript == null)
@@ -113,9 +125,9 @@ public class ScriptsAtom extends Atom {
 	    } else if (base instanceof CharSymbol) {
 		shiftUp = shiftDown = 0;
 		CharFont cf = ((CharSymbol) base).getCharFont(tf);
-		if (!((CharSymbol) base).isMarkedAsTextSymbol()
-		    || !tf.hasSpace(cf.fontId))
+		if (!((CharSymbol) base).isMarkedAsTextSymbol() || !tf.hasSpace(cf.fontId)) {
 		    delta = tf.getChar(cf, style).getItalic();
+		}
 		if (delta > TeXFormula.PREC && subscript == null) {
 		    hor.add(new StrutBox(delta, 0, 0, 0));
 		    delta = 0;
@@ -128,15 +140,11 @@ public class ScriptsAtom extends Atom {
 	    if (superscript == null) { // only subscript
 		Box x = subscript.createBox(subStyle);
 		// calculate and set shift amount
-		x.setShift(Math.max(Math.max(shiftDown, tf.getSub1(style)), x
-				    .getHeight()
-				    - 4 * Math.abs(tf.getXHeight(style, lastFontId)) / 5));
-		
+		x.setShift(Math.max(Math.max(shiftDown, tf.getSub1(style)), x.getHeight() - 4 * Math.abs(tf.getXHeight(style, lastFontId)) / 5));
 		hor.add(x);
-		// add scriptspace (constant value!)
-		//hor.add(SCRIPT_SPACE.createBox(env));
 		hor.add(deltaSymbol);
-                return hor;
+                
+		return hor;
 	    } else {
 		Box x = superscript.createBox(supStyle);
 		float msiz = x.getWidth();
@@ -200,6 +208,7 @@ public class ScriptsAtom extends Atom {
 		    hor.add(vBox);
 		}
                 hor.add(deltaSymbol);
+
 		return hor;
 	    }
 	}
@@ -212,4 +221,116 @@ public class ScriptsAtom extends Atom {
     public int getRightType() {
 	return base.getRightType();
     }
+    
+    public void setTreeRelations()
+    {
+    	if(children != null)
+    		children.clear();
+    	children.add(base);
+    	children.add(superscript);
+    	base.setTreeParent(this);
+    	if(superscript != null)		
+    		superscript.setTreeParent(this);
+    }
+
+    public void setArrowRelations()
+    {
+    	this.setSubExpr(superscript);
+    	base.setParent(superscript);
+    	base.setNextSibling(superscript);
+    	base.setPrevSibling(this);
+    	if(superscript != null)		
+    	{
+    		superscript.setParent(this);
+    		superscript.setNextSibling(this);
+    		superscript.setPrevSibling(base);
+    		if(superscript instanceof CharAtom || superscript instanceof SymbolAtom)
+    			superscript.setSubExpr(base);
+    	}
+    }
+    
+	@Override
+	public void setTreeParent(Atom at)
+	{
+		this.treeParent = at;
+	}
+
+	@Override
+	public Atom getTreeParent() 
+	{
+		return this.treeParent;
+	}
+
+	@Override
+	public void setChildren(Atom at)
+	{
+		
+	}
+
+	@Override
+	public void setParent(Atom at) 
+	{
+		this.parent = at;
+	}
+
+	@Override
+	public Atom getParent() {
+		return this.parent;
+	}
+
+	@Override
+	public void setNextSibling(Atom at)
+	{
+		this.nextSibling = at;
+	}
+
+	@Override
+	public Atom getNextSibling()
+	{
+		return this.nextSibling;
+	}
+
+	@Override
+	public void setPrevSibling(Atom at) 
+	{
+		this.prevSibling = at;
+	}
+
+	@Override
+	public Atom getPrevSibling() 
+	{
+		return this.prevSibling;
+	}
+
+	@Override
+	public void setSubExpr(Atom at)
+	{
+		this.subExpr = at;
+	}
+
+	@Override
+	public Atom getSubExpr() 
+	{
+		return this.subExpr;
+	}
+	
+	public Atom getBase()
+	{
+		return this.base;
+	}
+	
+	public Atom getSuperScript()
+	{
+		return this.superscript;
+	}
+	
+	public void setBase(Atom at)
+	{
+		this.base = at;
+	}
+	
+	public void setSuperScript(Atom at)
+	{
+		this.superscript = at;
+	}
 }
