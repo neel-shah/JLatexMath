@@ -39,6 +39,7 @@ import org.apache.fop.fo.XMLObj;
 public class JLaTeXMathObj extends XMLObj {
 
     public static final String JLATEXMATH_NS = "http://forge.scilab.org/p/jlatexmath";
+    public static final String MIME_TYPE = "image/latex";
 
     public JLaTeXMathObj(FONode parent) {
         super(parent);
