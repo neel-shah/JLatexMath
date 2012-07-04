@@ -190,8 +190,12 @@ public class SymbolAtom extends CharSymbol {
 	    HorizontalBox hb = new HorizontalBox(cb);
 	    if (delta > TeXFormula.PREC)
 		hb.add(new StrutBox(delta, 0, 0, 0));
+	    
+	    usedBox = hb;
 	    return hb;
 	}
+	
+	usedBox = cb;
 	return cb;
     }
     

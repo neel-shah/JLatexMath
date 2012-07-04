@@ -43,6 +43,11 @@ public class OvalBox extends FramedBox {
     public OvalBox(FramedBox fbox) {
 	super(fbox.box, fbox.thickness, fbox.space);
     }
+    
+    public void updateRectangle(float scale, float x, float y) {
+        super.updateRectangle(scale, x, y);
+        box.updateRectangle(scale, x + space + thickness, y);
+    }
 
     public void draw(Graphics2D g2, float x, float y) {
 	box.draw(g2, x + space + thickness, y);

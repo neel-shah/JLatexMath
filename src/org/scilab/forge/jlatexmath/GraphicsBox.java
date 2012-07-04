@@ -67,6 +67,10 @@ public class GraphicsBox extends Box {
 	    interp = null;
 	}
     }
+    
+    public void updateRectangle(float scale, float x, float y) {
+        super.updateRectangle(scl * scale, x, y);
+    }
    
     public void draw(Graphics2D g2, float x, float y) {
 	AffineTransform oldAt = g2.getTransform();

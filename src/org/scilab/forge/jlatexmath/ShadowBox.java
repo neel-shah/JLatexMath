@@ -46,6 +46,11 @@ public class ShadowBox extends FramedBox {
 	depth += shadowRule;
 	width += shadowRule;
     }
+    
+    public void updateRectangle(float scale, float x, float y) {
+        super.updateRectangle(scale, x, y);
+        box.updateRectangle(scale, x + space + thickness, y);
+    }
 
     public void draw(Graphics2D g2, float x, float y) {
 	float th = thickness / 2;

@@ -279,6 +279,8 @@ public class FractionAtom extends Atom {
         vBox.add(denom);
         vBox.setHeight(shiftUp + num.getHeight());
         vBox.setDepth(shiftDown + denom.getDepth());
+        
+        usedBox = vBox;
         return vBox;
     }
 

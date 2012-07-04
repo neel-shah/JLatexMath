@@ -60,6 +60,11 @@ public class FramedBox extends Box {
 	this.line = line;
 	this.bg = bg;
     }
+    
+    public void updateRectangle(float scale, float x, float y) {
+        super.updateRectangle(scale, x, y);
+	box.updateRectangle(scale, x + space + thickness, y);
+    }
 
     public void draw(Graphics2D g2, float x, float y) {
 	Stroke st = g2.getStroke();

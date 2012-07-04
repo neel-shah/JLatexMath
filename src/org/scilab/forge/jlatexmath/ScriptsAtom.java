@@ -75,14 +75,20 @@ public class ScriptsAtom extends Atom {
 	Box b = (base == null ? new StrutBox(0, 0, 0, 0) : base.createBox(env));
         Box deltaSymbol = new StrutBox(0, 0, 0, 0);
 	if (subscript == null && superscript == null)
+	{
+		usedBox = b;
 	    return b;
+	}
 	else {
 	    TeXFont tf = env.getTeXFont();
 	    int style = env.getStyle();
 	    
 	    if (base.type_limits == TeXConstants.SCRIPT_LIMITS || (base.type_limits == TeXConstants.SCRIPT_NORMAL && style == TeXConstants.STYLE_DISPLAY))
-		return new UnderOverAtom(new UnderOverAtom(base, subscript, TeXConstants.UNIT_POINT, 0.3f, true, false),
+	    {
+	    	usedBox = new UnderOverAtom(new UnderOverAtom(base, subscript, TeXConstants.UNIT_POINT, 0.3f, true, false),
 					 superscript, TeXConstants.UNIT_POINT, 3.0f, true, true).createBox(env);
+	    	return usedBox; 
+		}
 	    
 	    HorizontalBox hor = new HorizontalBox(b);
 	    
@@ -144,6 +150,7 @@ public class ScriptsAtom extends Atom {
 		hor.add(x);
 		hor.add(deltaSymbol);
                 
+		usedBox = hor;
 		return hor;
 	    } else {
 		Box x = superscript.createBox(supStyle);
@@ -209,6 +216,7 @@ public class ScriptsAtom extends Atom {
 		}
                 hor.add(deltaSymbol);
 
+        usedBox = hor;
 		return hor;
 	    }
 	}

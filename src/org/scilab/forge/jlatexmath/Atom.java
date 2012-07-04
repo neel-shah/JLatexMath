@@ -58,6 +58,8 @@ public abstract class Atom implements Cloneable {
 
     public int alignment = -1;
     
+    protected Box usedBox;
+    
     /**
      * Convert this atom into a {@link Box}, using properties set by "parent"
      * atoms, like the TeX style, the last used font, color settings, ...
@@ -93,6 +95,10 @@ public abstract class Atom implements Cloneable {
 	return type;
     }
     
+    public Box getBox() {
+        return usedBox;
+    }
+    
     public Atom clone() {
 	try {
 	    return (Atom)super.clone();
@@ -110,7 +116,7 @@ public abstract class Atom implements Cloneable {
     public abstract void setChildren(Atom at);
     
     /**
-     * Keeps record for which Atom to move on if user presses an Arrow key
+     * Keeps record, for which Atom to move on if user presses an Arrow key
      */
     public abstract void setParent(Atom at);
     public abstract Atom getParent();

@@ -78,6 +78,8 @@ public class CharAtom extends CharSymbol {
 	    box = new ScaleBox(box, 0.8f, 0.8f);
 	}
 	
+	
+	usedBox = box;
 	return box;
     }
 

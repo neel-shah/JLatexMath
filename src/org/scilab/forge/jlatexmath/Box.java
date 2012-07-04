@@ -33,6 +33,7 @@ package org.scilab.forge.jlatexmath;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.awt.Stroke;
 import java.awt.BasicStroke;
@@ -73,6 +74,8 @@ public abstract class Box {
     protected Color background;
 
     private Color prevColor; // used temporarily in startDraw and endDraw
+    
+    private Rectangle2D.Float rectangle = new Rectangle2D.Float();
 
     /**
      * The width of this box, i.e. the value that will be used for further
@@ -243,6 +246,29 @@ public abstract class Box {
         shift = s;
     }
 
+    /**
+     * Paints this box at the given coordinates using the given graphics context.
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     */
+    public void updateRectangle(float scale, float x, float y) {
+	float w = width;
+	if (w < 0) {
+            x += w;
+            w = -w;
+        }
+        rectangle.x = (float) (x * scale);
+        rectangle.y = (float) ((y - height) * scale);
+        rectangle.width = (float) (w * scale);
+        rectangle.height = (float) ((height + depth) * scale);
+    }
+    
+    public Rectangle getRectangle() 
+    {
+	    return rectangle.getBounds();
+    }
+    
     /**
      * Paints this box at the given coordinates using the given graphics context.
      *

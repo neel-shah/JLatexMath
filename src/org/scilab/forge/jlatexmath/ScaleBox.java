@@ -54,6 +54,12 @@ public class ScaleBox extends Box {
 	this.factor = factor;
     }
     
+    public void updateRectangle(float scale, float x, float y) {
+        super.updateRectangle(scale, x, y);
+        float dec = xscl < 0 ? width : 0;
+        box.updateRectangle((float) (xscl * scale), x + dec, y);
+    }
+    
     public void draw(Graphics2D g2, float x, float y) {
 	drawDebug(g2, x, y);
 	if (xscl != 0 && yscl != 0) {

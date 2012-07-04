@@ -241,6 +241,7 @@ public class RowAtom extends Atom implements Row {
         // reset previousAtom
         previousAtom = null;
 	
+    usedBox = hBox;
 	return hBox;
     }
 

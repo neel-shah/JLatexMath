@@ -63,8 +63,10 @@ public class EmptyAtom extends Atom {
     	shift = s;
     }
  
-    public Box createBox(TeXEnvironment env) {
-	return new StrutBox(height, width, depth, shift);
+    public Box createBox(TeXEnvironment env) 
+    {
+    	usedBox = new StrutBox(height, width, depth, shift);
+    	return usedBox;
     }
 
 	@Override

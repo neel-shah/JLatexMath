@@ -94,8 +94,11 @@ public class NthRoot extends Atom {
 	squareRoot.add(ob);
 	
 	if (root == null)
+	{
 	    // simple square root
+		usedBox = squareRoot;
 	    return squareRoot;
+	}
 	else { // nthRoot, not a simple square root
 	    
 	    // create box from root
@@ -117,6 +120,8 @@ public class NthRoot extends Atom {
 	    res.add(r);
 	    res.add(negativeKern);
 	    res.add(squareRoot);
+	    
+	    usedBox = res;
 	    return res;
 	} 
     }

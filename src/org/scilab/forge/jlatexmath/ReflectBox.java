@@ -45,6 +45,11 @@ public class ReflectBox extends Box {
 	shift = b.shift;
     }
     
+    public void updateRectangle(float scale, float x, float y) {
+        super.updateRectangle(scale, x, y);
+        box.updateRectangle(-1, x + width, y);
+    }
+    
     public void draw(Graphics2D g2, float x, float y) {
 	drawDebug(g2, x, y);
 	g2.translate(x, y);

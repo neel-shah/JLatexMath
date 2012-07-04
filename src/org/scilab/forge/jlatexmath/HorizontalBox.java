@@ -83,6 +83,15 @@ public class HorizontalBox extends Box {
 
         return b;
     }
+    
+    public void updateRectangle(float scale, float x, float y) {
+        super.updateRectangle(scale, x, y);
+        float xPos = x;
+        for (Box box: children) {
+            box.updateRectangle(scale, xPos, y + box.shift);
+            xPos += box.getWidth();
+        }
+    }
 
     public void draw(Graphics2D g2, float x, float y) {
         startDraw(g2, x, y);

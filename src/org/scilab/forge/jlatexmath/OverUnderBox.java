@@ -78,6 +78,32 @@ public class OverUnderBox extends Box {
             + (over ? 0 : d.getWidth())
 	    + (!over && script != null ? script.height + script.depth + kern : 0);
     }
+    
+    public void updateRectangle(float scale, float x, float y) {
+        super.updateRectangle(scale, x, y);
+        base.updateRectangle(scale, x, y);
+
+        float yVar = y - base.height - del.getWidth();
+        del.setDepth(del.getHeight() + del.getDepth());
+        del.setHeight(0);
+        if (over) {
+            del.updateRectangle(scale, x + (del.height + del.depth) * 0.75f, yVar);
+            if (script != null) {
+                script.updateRectangle(scale, x, yVar - kern - script.depth);
+            }
+        }
+
+        yVar = y + base.depth;
+        if (!over) { // draw delimiter and script under base box
+            del.updateRectangle(scale, x + (del.getHeight() + del.depth) * 0.75f, yVar);
+            yVar += del.getWidth();
+
+            // draw subscript
+            if (script != null) {
+                script.updateRectangle(scale, x, yVar + kern + script.height);
+            }
+        }
+    }
 
     public void draw(Graphics2D g2, float x, float y) {
 	drawDebug(g2, x, y);
