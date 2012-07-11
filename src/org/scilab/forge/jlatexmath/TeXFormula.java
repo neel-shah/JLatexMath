@@ -131,7 +131,7 @@ public class TeXFormula {
 
     protected Map<String, String> jlmXMLMap;
     private TeXParser parser;
-    private TreeEditor treEd = new TreeEditor();
+    public TreeEditor treEd = new TreeEditor();
 
     static {
         // character-to-symbol and character-to-delimiter mappings
@@ -567,7 +567,6 @@ public class TeXFormula {
             return new StrutBox(0, 0, 0, 0);
         else
         {
-        	root.setTreeParent(null);
             return root.createBox(style);
         }
     }
@@ -869,6 +868,7 @@ public class TeXFormula {
     public void setRoot(Atom at)
     {
     	this.root = at;
+    	root.setTreeParent(null);
     }
     
     static class FontInfos {

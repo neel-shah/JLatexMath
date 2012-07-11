@@ -104,7 +104,6 @@ public class TreeEditor
 		{
 		case 1 :
 			this.isWritingCommand = false;
-			this.formula.createBox(this.formula.style);
 			this.squareRoot();
 			break;
 		case 2 :
@@ -620,7 +619,7 @@ public class TreeEditor
 					if(grandPa == null)
 					{
 						this.formula.setRoot(r.elements.getFirst());
-						this.formula.createBox(this.formula.style);
+						//this.formula.createBox(this.formula.style);
 						this.selAtom = this.formula.getRoot();
 					}
 				}
@@ -1216,5 +1215,10 @@ public class TreeEditor
 			this.formula.setRoot(n);
 			this.selAtom = e;
 		}
+	}
+	
+	public Atom getSelAtm()
+	{
+		return selAtom;
 	}
 }
