@@ -50,7 +50,7 @@ import org.scilab.forge.jlatexmath.TeXIcon;
 public class Example2 {
     public static void main(String[] args) {
 	
-	String latex = "x+3";
+	String latex = "\\sin{x+3}x";
 
 	TeXFormula formula = new TeXFormula(latex);
 	TeXIcon icon = formula.createTeXIcon(TeXConstants.STYLE_DISPLAY, 20);

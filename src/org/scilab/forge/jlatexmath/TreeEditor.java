@@ -40,7 +40,7 @@ public class TreeEditor
 				if(command.length() > 1)
 					command.delete(0, command.length());
 				com = command.toString();
-				this.symbolChar('|');
+				//this.symbolChar('|');
 				break;
 			case '' :
 				this.commandWritten(1);
@@ -48,11 +48,11 @@ public class TreeEditor
 			case '' :
 				this.commandWritten(2);
 				break;
-
 			default :
 				if(c == '' || event.isAltDown() || event.isControlDown())
 					return;
-				this.symbolChar(c);
+				String latex = c + "";
+				this.symbolChar(latex);
 				if(this.isWritingCommand)
 				{
 					command.append(c);
@@ -92,6 +92,119 @@ public class TreeEditor
 		case 8 :
 			if(selAtom != null)
 				this.delete();
+			break;
+		case 80 :
+			if(event.isAltDown())
+			{
+				String latex = "\\pi";
+				this.symbolChar(latex);
+			}
+			break;
+		case 65 :
+			if(event.isAltDown())
+			{
+				String latex = "\\alpha";
+				this.symbolChar(latex);
+			}
+			break;
+		case 66 :
+			if(event.isAltDown())
+			{
+				String latex = "\\beta";
+				this.symbolChar(latex);
+			}
+			break;
+		case 68 :
+			if(event.isAltDown())
+			{
+				String latex = "\\delta";
+				this.symbolChar(latex);
+			}
+			break;
+		case 70 :
+			if(event.isAltDown())
+			{
+				String latex = "\\phi";
+				this.symbolChar(latex);
+			}
+			break;
+		case 71 :
+			if(event.isAltDown())
+			{
+				String latex = "\\gamma";
+				this.symbolChar(latex);
+			}
+			break;	
+		case 76 :
+			if(event.isAltDown())
+			{
+				String latex = "\\lambda";
+				this.symbolChar(latex);
+			}
+			break;
+		case 77 :
+			if(event.isAltDown())
+			{
+				String latex = "\\mu";
+				this.symbolChar(latex);
+			}
+			break;
+		case 83 :
+			if(event.isAltDown())
+			{
+				String latex = "\\sigma";
+				this.symbolChar(latex);
+			}
+			break;
+		case 84 :
+			if(event.isAltDown())
+			{
+				String latex = "\\theta";
+				this.symbolChar(latex);
+			}
+			break;
+		case 87 :
+			if(event.isAltDown())
+			{
+				String latex = "\\omega";
+				this.symbolChar(latex);
+			}
+			break;
+		case 107 :
+			if(event.isAltDown())
+			{
+				String latex = "\\pm";
+				this.symbolChar(latex);
+			}
+			break;
+		case 109 :
+			if(event.isAltDown())
+			{
+				String latex = "\\mp";
+				this.symbolChar(latex);
+			}
+			break;
+		case 61 :
+			if(event.isAltDown())
+			{
+				String latex = "\\neq";
+				this.symbolChar(latex);
+			}
+			break;
+		case 44 :
+			if(event.isAltDown())
+			{
+				String latex = "\\leq";
+				this.symbolChar(latex);
+			}
+			break;
+		case 46 :
+			if(event.isAltDown())
+			{
+				String latex = "\\geq";
+				this.symbolChar(latex);
+			}
+			break;
 		default :
 			return;
 		}
@@ -813,14 +926,13 @@ public class TreeEditor
 		}
 	}
 	
-	public void symbolChar(char c)
+	public void symbolChar(String latex)
 	{
 		if(selAtom instanceof EmptyAtom)
 		{
 			if(treeParent != null && treeParent instanceof ScriptsAtom)
 			{
 				ScriptsAtom temp = (ScriptsAtom) treeParent;
-				String latex = c + "";
 				TeXFormula formula = new TeXFormula(latex);
 				Atom root = formula.getRoot();
 				if(selAtom.equals(temp.getBase()))
@@ -832,7 +944,6 @@ public class TreeEditor
 			if(treeParent != null && treeParent instanceof FractionAtom)
 			{
 				FractionAtom temp = (FractionAtom) treeParent;
-				String latex = c + "";
 				TeXFormula formula = new TeXFormula(latex);
 				Atom root = formula.getRoot();
 				if(selAtom.equals(temp.getNum()))
@@ -844,7 +955,6 @@ public class TreeEditor
 			if(treeParent != null && treeParent instanceof NthRoot)
 			{
 				NthRoot temp = (NthRoot) treeParent;
-				String latex = c + "";
 				TeXFormula formula = new TeXFormula(latex);
 				Atom root = formula.getRoot();
 				if(selAtom.equals(temp.getBase()))
@@ -858,7 +968,6 @@ public class TreeEditor
 				RowAtom temp = (RowAtom) treeParent;
 				int j = temp.elements.size();
 				int i = 0;
-				String latex = c + "";
 				TeXFormula formula = new TeXFormula(latex);
 				Atom root = formula.getRoot();
 				while(i != j)
@@ -875,7 +984,6 @@ public class TreeEditor
 			}
 			if(treeParent == null)
 			{
-				String latex = c + "";
 				TeXFormula formula = new TeXFormula(latex);
 				Atom root = formula.getRoot();
 				this.formula.setRoot(root);
@@ -887,7 +995,6 @@ public class TreeEditor
 			if(treeParent != null && treeParent instanceof ScriptsAtom)
 			{
 				ScriptsAtom s = (ScriptsAtom) treeParent;
-				String latex = c + "";
 				TeXFormula formula = new TeXFormula(latex);
 				Atom root = formula.getRoot();
 				if(selAtom instanceof RowAtom)
@@ -909,7 +1016,6 @@ public class TreeEditor
 			if(treeParent != null && treeParent instanceof FractionAtom)
 			{
 				FractionAtom f = (FractionAtom) treeParent;
-				String latex = c + "";
 				TeXFormula formula = new TeXFormula(latex);
 				Atom root = formula.getRoot();
 				if(selAtom instanceof RowAtom)
@@ -931,7 +1037,6 @@ public class TreeEditor
 			if(treeParent != null && treeParent instanceof NthRoot)
 			{
 				NthRoot n = (NthRoot) treeParent;
-				String latex = c + "";
 				TeXFormula formula = new TeXFormula(latex);
 				Atom root = formula.getRoot();;
 				if(selAtom instanceof RowAtom)
@@ -955,7 +1060,6 @@ public class TreeEditor
 				RowAtom r = (RowAtom) treeParent;
 				int j = r.elements.size();
 				int i = 0;
-				String latex = c + "";
 				TeXFormula formula = new TeXFormula(latex);
 				Atom root = formula.getRoot();
 				while(i != j)
@@ -969,7 +1073,6 @@ public class TreeEditor
 			}
 			if(treeParent == null)
 			{
-				String latex = c + "";
 				TeXFormula formula = new TeXFormula(latex);
 				Atom root = formula.getRoot();
 				if(selAtom instanceof RowAtom)
