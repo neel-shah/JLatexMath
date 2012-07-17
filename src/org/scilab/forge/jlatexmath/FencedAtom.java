@@ -31,6 +31,7 @@
 
 package org.scilab.forge.jlatexmath;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +39,14 @@ import java.util.List;
  * according to the height of the base.
  */
 public class FencedAtom extends Atom {
+	
+	private Atom treeParent = null;
+	ArrayList<Atom> children = new ArrayList<Atom>();
+	
+	private Atom parent = null;
+	private Atom nextSibling = null;
+	private Atom prevSibling = null;
+	private Atom subExpr = null;
 
     // parameters used in the TeX algorithm
     private static final int DELIMITER_FACTOR = 901;
@@ -45,7 +54,7 @@ public class FencedAtom extends Atom {
     private static final float DELIMITER_SHORTFALL = 5f;
 
     // base atom
-    private final Atom base;
+    private Atom base;
 
     // delimiters
     private SymbolAtom left = null;
@@ -98,6 +107,8 @@ public class FencedAtom extends Atom {
     }
 
     public Box createBox(TeXEnvironment env) {
+    	this.setTreeRelation();
+    	this.setArrowRelation();
         TeXFont tf = env.getTeXFont();
         Box content = base.createBox(env);
         float shortfall = DELIMITER_SHORTFALL * SpaceAtom.getFactor(TeXConstants.UNIT_POINT, env);
@@ -149,72 +160,95 @@ public class FencedAtom extends Atom {
             hBox.add(b);
         }
 
+        usedBox = hBox;
         return hBox;
     }
 
+    public void setTreeRelation()
+    {
+    	base.setTreeParent(this);
+    	if(children != null)
+    		children.clear();
+    	children.add(base);
+    }
+    
+    public void setArrowRelation()
+    {
+    	this.setSubExpr(base);
+    	base.setNextSibling(this);
+    	base.setPrevSibling(this);
+    	base.setParent(this);
+    }
+    
 	@Override
-	public void setTreeParent(Atom at) {
-		// TODO Auto-generated method stub
+	public void setTreeParent(Atom at)
+	{
+		this.treeParent = at;
+	}
+
+	@Override
+	public Atom getTreeParent()
+	{
+		return this.treeParent;
+	}
+
+	@Override
+	public void setChildren(Atom at) 
+	{
 		
 	}
 
 	@Override
-	public Atom getTreeParent() {
-		// TODO Auto-generated method stub
-		return null;
+	public void setParent(Atom at) 
+	{
+		this.parent = at;
 	}
 
 	@Override
-	public void setChildren(Atom at) {
-		// TODO Auto-generated method stub
-		
+	public Atom getParent()
+	{
+		return this.parent;
 	}
 
 	@Override
-	public void setParent(Atom at) {
-		// TODO Auto-generated method stub
-		
+	public void setNextSibling(Atom at) 
+	{
+		this.nextSibling = at;
 	}
 
 	@Override
-	public Atom getParent() {
-		// TODO Auto-generated method stub
-		return null;
+	public Atom getNextSibling()
+	{
+		return this.nextSibling;
 	}
 
 	@Override
-	public void setNextSibling(Atom at) {
-		// TODO Auto-generated method stub
-		
+	public void setPrevSibling(Atom at) 
+	{
+		this.prevSibling = at;
 	}
 
 	@Override
-	public Atom getNextSibling() {
-		// TODO Auto-generated method stub
-		return null;
+	public Atom getPrevSibling()
+	{
+		return this.prevSibling;
 	}
 
 	@Override
-	public void setPrevSibling(Atom at) {
-		// TODO Auto-generated method stub
-		
+	public void setSubExpr(Atom at)
+	{
+		this.subExpr = at;
 	}
 
 	@Override
-	public Atom getPrevSibling() {
-		// TODO Auto-generated method stub
-		return null;
+	public Atom getSubExpr() 
+	{
+		return this.subExpr;
 	}
 
-	@Override
-	public void setSubExpr(Atom at) {
-		// TODO Auto-generated method stub
-		
+	public void setBase(Atom at)
+	{
+		this.base = at;
 	}
-
-	@Override
-	public Atom getSubExpr() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 }

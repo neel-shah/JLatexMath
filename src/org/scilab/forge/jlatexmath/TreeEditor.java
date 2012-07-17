@@ -205,6 +205,19 @@ public class TreeEditor
 				this.symbolChar(latex);
 			}
 			break;
+		case 81 :
+			if(event.isControlDown())
+			{
+				TeXFormula typed = new TeXFormula("\\sin");
+				EmptyAtom e = new EmptyAtom(0.5f, 0.5f, 0, 0);
+				TeXFormula fenced = new TeXFormula("\\left(\\right)");
+				FencedAtom f = (FencedAtom) fenced.getRoot();
+				f.setBase(e);
+				TrigoAtom trigo = new TrigoAtom((TypedAtom) typed.getRoot(), f); 
+				this.trigoFunction(trigo);
+				this.selAtom = e;
+			}
+			break;
 		default :
 			return;
 		}
@@ -737,6 +750,81 @@ public class TreeEditor
 					}
 				}
 			}
+			if(treeParent != null && treeParent instanceof FencedAtom)
+			{
+				FencedAtom n = (FencedAtom) treeParent;
+				Atom grandPa = n.getTreeParent().getTreeParent();
+				treeParent = selAtom.getTreeParent().getTreeParent();
+				if(grandPa != null && grandPa instanceof ScriptsAtom)
+				{
+					ScriptsAtom gs = (ScriptsAtom) grandPa;
+					EmptyAtom e = new EmptyAtom(0.5f, 0.5f, 0, 0);
+					if(treeParent.equals(gs.getBase()))
+					{
+						gs.setBase(e);
+						this.selAtom = e;
+					}
+					else
+					{
+						gs.setSuperScript(e);
+						this.selAtom = e;
+					}
+				}
+				if(grandPa != null && grandPa instanceof FractionAtom)
+				{
+					FractionAtom gf = (FractionAtom) grandPa;
+					EmptyAtom e = new EmptyAtom(0.5f, 0.5f, 0, 0);
+					if(treeParent.equals(gf.getNum()))
+					{
+						gf.setNum(e);
+						this.selAtom = e;
+					}
+					else
+					{
+						gf.setDenom(e);
+						this.selAtom = e;
+					}
+				}
+				if(grandPa != null && grandPa instanceof NthRoot)
+				{
+					NthRoot gn = (NthRoot) grandPa;
+					EmptyAtom e = new EmptyAtom(0.5f, 0.5f, 0, 0);
+					if(treeParent.equals(gn.getBase()))
+					{
+						gn.setBase(e);
+						this.selAtom = e;
+					}
+					else
+					{
+						gn.setRoot(e);
+						this.selAtom = e;
+					}
+				}
+				if(grandPa != null && grandPa instanceof RowAtom)
+				{
+					RowAtom gr = (RowAtom) grandPa;
+					EmptyAtom e = new EmptyAtom(0.5f, 0.5f, 0, 0);
+					int j = gr.elements.size();
+					int i = 0;
+					while(i != j)
+					{
+						if(treeParent.equals(gr.elements.get(i)))
+						{
+							gr.elements.remove(i);
+							break;
+						}
+						++i;
+					}
+					gr.elements.add(i, e);
+					this.selAtom = e;
+				}
+				if(grandPa == null)
+				{
+					EmptyAtom e = new EmptyAtom(0.5f, 0.5f, 0, 0);
+					this.formula.setRoot(e);
+					this.selAtom = e;
+				}
+			}
 		}
 		else
 		{
@@ -788,6 +876,13 @@ public class TreeEditor
 					++i;
 				}
 				r.elements.add(i, e);
+				this.selAtom = e;
+			}
+			if(treeParent != null && treeParent instanceof FencedAtom)
+			{
+				FencedAtom f = (FencedAtom) treeParent;
+				EmptyAtom e = new EmptyAtom(0.5f, 0.5f, 0, 0);
+				f.setBase(e);
 				this.selAtom = e;
 			}
 			if(treeParent == null)
@@ -854,6 +949,14 @@ public class TreeEditor
 			temp.elements.add(i, s);
 			this.selAtom = e;
 		}
+		if(treeParent != null && treeParent instanceof FencedAtom)
+		{
+			FencedAtom f = (FencedAtom) treeParent;
+			EmptyAtom e = new EmptyAtom(0.5f, 0.5f, 0, 0);
+			ScriptsAtom s = new ScriptsAtom(selAtom, null, e);
+			f.setBase(s);
+			this.selAtom = e;
+		}
 		if(treeParent == null)
 		{
 			EmptyAtom e = new EmptyAtom(0.5f, 0.5f, 0, 0);
@@ -915,6 +1018,14 @@ public class TreeEditor
 				++i;
 			}
 			temp.elements.add(i, f);
+			this.selAtom = e;
+		}
+		if(treeParent != null && treeParent instanceof FencedAtom)
+		{
+			FencedAtom f = (FencedAtom) treeParent;
+			EmptyAtom e = new EmptyAtom(0.5f, 0.5f, 0, 0);
+			FractionAtom fr = new FractionAtom(selAtom, e);
+			f.setBase(fr);
 			this.selAtom = e;
 		}
 		if(treeParent == null)
@@ -980,6 +1091,14 @@ public class TreeEditor
 					++i;
 				}
 				temp.elements.add(i, root);
+				this.selAtom = root;
+			}
+			if(treeParent != null && treeParent instanceof FencedAtom)
+			{
+				FencedAtom f = (FencedAtom) treeParent;
+				TeXFormula formula = new TeXFormula(latex);
+				Atom root = formula.getRoot();
+				f.setBase(root);
 				this.selAtom = root;
 			}
 			if(treeParent == null)
@@ -1071,6 +1190,24 @@ public class TreeEditor
 				r.elements.add(i+1,root);
 				this.selAtom = root;
 			}
+			if(treeParent != null && treeParent instanceof FencedAtom)
+			{
+				FencedAtom f = (FencedAtom) treeParent;
+				TeXFormula formula = new TeXFormula(latex);
+				Atom root = formula.getRoot();
+				if(selAtom instanceof RowAtom)
+				{
+					RowAtom r = (RowAtom) selAtom;
+					r.elements.addLast(root);
+				}
+				else
+				{
+					RowAtom r = new RowAtom(selAtom);
+					r.add(root);
+					f.setBase(r);
+				}
+				this.selAtom = root;
+			}
 			if(treeParent == null)
 			{
 				TeXFormula formula = new TeXFormula(latex);
@@ -1146,6 +1283,14 @@ public class TreeEditor
 					++i;
 				}
 				temp.elements.add(i, n);
+				this.selAtom = e;
+			}
+			if(treeParent != null && treeParent instanceof FencedAtom)
+			{
+				FencedAtom f = (FencedAtom) treeParent;
+				EmptyAtom e = new EmptyAtom(0.5f, 0.5f, 0, 0);
+				NthRoot n = new NthRoot(e, null);
+				f.setBase(n);
 				this.selAtom = e;
 			}
 			if(treeParent == null)
@@ -1237,6 +1382,24 @@ public class TreeEditor
 				r.elements.add(i+1,n);
 				this.selAtom = e;
 			}
+			if(treeParent != null && treeParent instanceof FencedAtom)
+			{
+				FencedAtom f = (FencedAtom) treeParent;
+				EmptyAtom e = new EmptyAtom(0.5f, 0.5f, 0, 0);
+				NthRoot n = new NthRoot(e, null);
+				if(selAtom instanceof RowAtom)
+				{
+					RowAtom r = (RowAtom) selAtom;
+					r.elements.addLast(n);
+				}
+				else
+				{
+					RowAtom r = new RowAtom(selAtom);
+					r.add(n);
+					f.setBase(r);
+				}
+				this.selAtom = e;
+			}
 			if(treeParent == null)
 			{
 				EmptyAtom e = new EmptyAtom(0.5f, 0.5f, 0, 0);
@@ -1311,12 +1474,174 @@ public class TreeEditor
 			r.elements.add(i, n);
 			this.selAtom = e;
 		}
+		if(treeParent != null && treeParent instanceof FencedAtom)
+		{
+			FencedAtom f = (FencedAtom) treeParent;
+			EmptyAtom e = new EmptyAtom(0.5f, 0.5f, 0, 0);
+			NthRoot n = new NthRoot(e, selAtom);
+			f.setBase(n);
+			this.selAtom = e;			
+		}
 		if(treeParent == null)
 		{
 			EmptyAtom e = new EmptyAtom(0.5f, 0.5f, 0, 0);
 			NthRoot n = new NthRoot(e, selAtom);
 			this.formula.setRoot(n);
 			this.selAtom = e;
+		}
+	}
+	
+	public void trigoFunction(TrigoAtom trigo)
+	{
+		if(selAtom instanceof EmptyAtom)
+		{
+			if(treeParent != null && treeParent instanceof ScriptsAtom)
+			{
+				ScriptsAtom temp = (ScriptsAtom) treeParent;
+				if(selAtom.equals(temp.getBase()))
+					temp.setBase(trigo);
+				else
+					temp.setSuperScript(trigo);
+			}
+			if(treeParent != null && treeParent instanceof FractionAtom)
+			{
+				FractionAtom temp = (FractionAtom) treeParent;
+				if(selAtom.equals(temp.getNum()))
+					temp.setNum(trigo);
+				else
+					temp.setDenom(trigo);
+			}
+			if(treeParent != null && treeParent instanceof NthRoot)
+			{
+				NthRoot temp = (NthRoot) treeParent;
+				if(selAtom.equals(temp.getBase()))
+					temp.setBase(trigo);
+				else
+					temp.setRoot(trigo);
+			}
+			if(treeParent != null && treeParent instanceof RowAtom)
+			{
+				RowAtom temp = (RowAtom) treeParent;
+				int j = temp.elements.size();
+				int i = 0;
+				while(i != j)
+				{
+					if(selAtom.equals(temp.elements.get(i)))
+					{
+						temp.elements.remove(i);
+						break;
+					}
+					++i;
+				}
+				temp.elements.add(i, trigo);
+			}
+			if(treeParent != null && treeParent instanceof FencedAtom)
+			{
+				FencedAtom f = (FencedAtom) treeParent;
+				f.setBase(trigo);
+			}
+			if(treeParent == null)
+				this.formula.setRoot(trigo);
+		}
+		else
+		{
+			if(treeParent != null && treeParent instanceof ScriptsAtom)
+			{
+				ScriptsAtom s = (ScriptsAtom) treeParent;
+				if(selAtom instanceof RowAtom)
+				{
+					RowAtom temp = (RowAtom) selAtom;
+					temp.elements.addLast(trigo);
+				}
+				else
+				{
+					RowAtom temp = new RowAtom(selAtom);
+					temp.add(trigo);
+					if(selAtom.equals(s.getBase()))
+						s.setBase(temp);
+					else
+						s.setSuperScript(temp);
+				}
+			}
+			if(treeParent != null && treeParent instanceof FractionAtom)
+			{
+				FractionAtom f = (FractionAtom) treeParent;
+				if(selAtom instanceof RowAtom)
+				{
+					RowAtom temp = (RowAtom) selAtom;
+					temp.elements.addLast(trigo);
+				}
+				else
+				{
+					RowAtom temp = new RowAtom(selAtom);
+					temp.add(trigo);
+					if(selAtom.equals(f.getNum()))
+						f.setNum(temp);
+					else
+						f.setDenom(temp);
+				}
+			}
+			if(treeParent != null && treeParent instanceof NthRoot)
+			{
+				NthRoot n = (NthRoot) treeParent;
+				if(selAtom instanceof RowAtom)
+				{
+					RowAtom temp = (RowAtom) selAtom;
+					temp.elements.addLast(trigo);
+				}
+				else
+				{
+					RowAtom temp = new RowAtom(selAtom);
+					temp.add(trigo);
+					if(selAtom.equals(n.getBase()))
+						n.setBase(temp);
+					else
+						n.setRoot(temp);
+				}
+				this.selAtom = root;
+			}
+			if(treeParent != null && treeParent instanceof RowAtom)
+			{
+				RowAtom r = (RowAtom) treeParent;
+				int j = r.elements.size();
+				int i = 0;
+				while(i != j)
+				{
+					if(selAtom.equals(r.elements.get(i)))
+						break;
+					++i;
+				}
+				r.elements.add(i+1, trigo);
+			}
+			if(treeParent != null && treeParent instanceof FencedAtom)
+			{
+				FencedAtom f = (FencedAtom) treeParent;
+				if(selAtom instanceof RowAtom)
+				{
+					RowAtom r = (RowAtom) selAtom;
+					r.elements.addFirst(trigo);
+				}
+				else
+				{
+					RowAtom temp = new RowAtom(selAtom);
+					temp.add(trigo);
+					f.setBase(temp);
+				}
+			}
+			if(treeParent == null)
+			{
+				if(selAtom instanceof RowAtom)
+				{
+					RowAtom r = (RowAtom) selAtom;
+					r.elements.addLast(trigo);
+				}
+				else
+				{
+					RowAtom r = new RowAtom(selAtom);
+					r.add(trigo);
+					this.formula.setRoot(r);
+				}
+			}
 		}
 	}
 	
