@@ -76,18 +76,38 @@ public class TreeEditor
 		case 37 :
 			if(selAtom.getPrevSibling() != null)
 				selAtom = selAtom.getPrevSibling();
+			if(selAtom instanceof FencedAtom)
+			{
+				FencedAtom f = (FencedAtom) selAtom;
+				this.selAtom = f.getBase();
+			}
 			break;
 		case 38 :
 			 if(selAtom.getParent() != null)
 				 selAtom = selAtom.getParent();
+			 if(selAtom instanceof FencedAtom)
+			 {
+				 FencedAtom f = (FencedAtom) selAtom;
+				 this.selAtom = f.getBase();
+			 }	
 			 break;
 		case 39 :
 			if(selAtom.getNextSibling() != null)
 				selAtom = selAtom.getNextSibling();
+			if(selAtom instanceof FencedAtom)
+			{
+				FencedAtom f = (FencedAtom) selAtom;
+				this.selAtom = f.getBase();
+			}
 			break;
 		case 40 :
 			if(selAtom.getSubExpr() != null)
 				selAtom = selAtom.getSubExpr();
+			if(selAtom instanceof FencedAtom)
+			{
+				FencedAtom f = (FencedAtom) selAtom;
+				this.selAtom = f.getBase();
+			}
 			break;
 		case 8 :
 			if(selAtom != null)
@@ -742,6 +762,21 @@ public class TreeEditor
 							gn.setRoot(r.elements.getFirst());
 						this.selAtom = r.elements.getFirst();
 					}
+					if(grandPa != null && grandPa instanceof FencedAtom)
+					{
+						FencedAtom f = (FencedAtom) grandPa;
+						if(grandPa.getTreeParent() instanceof TrigoAtom)
+						{
+							f.setBase(r.elements.getFirst());
+							this.selAtom = f.getBase();
+						}
+						else
+						{
+							ScriptsAtom s = (ScriptsAtom) grandPa.getTreeParent();
+							s.setBase(r.elements.getFirst());
+							this.selAtom = s.getBase();
+						}
+					}
 					if(grandPa == null)
 					{
 						this.formula.setRoot(r.elements.getFirst());
@@ -882,7 +917,13 @@ public class TreeEditor
 			{
 				FencedAtom f = (FencedAtom) treeParent;
 				EmptyAtom e = new EmptyAtom(0.5f, 0.5f, 0, 0);
-				f.setBase(e);
+				if(f.getTreeParent() instanceof TrigoAtom)
+					f.setBase(e);
+				else
+				{
+					ScriptsAtom s = (ScriptsAtom) f.getTreeParent();
+					s.setBase(e);
+				}
 				this.selAtom = e;
 			}
 			if(treeParent == null)
@@ -897,13 +938,26 @@ public class TreeEditor
 	
 	public void makeScripts()
 	{
+		Atom at = this.selAtom;
+		if(!(selAtom instanceof CharAtom || selAtom instanceof SymbolAtom))
+		{
+			TeXFormula temp = new TeXFormula("\\left(\\right)"); 
+			FencedAtom f = (FencedAtom) temp.getRoot();
+			f.setBase(selAtom);
+			this.selAtom = f;
+		}
 		if(treeParent != null && treeParent instanceof ScriptsAtom)
 		{
 			ScriptsAtom temp = (ScriptsAtom) treeParent;
 			EmptyAtom e = new EmptyAtom(0.5f, 0.5f, 0, 0);
 			ScriptsAtom s = new ScriptsAtom(selAtom, null, e);
 			if(selAtom.equals(temp.getBase()))
-				temp.setBase(s);
+			{
+				TeXFormula temp2 = new TeXFormula("\\left(\\right)"); 
+				FencedAtom f = (FencedAtom) temp2.getRoot();
+				f.setBase(s);
+				temp.setBase(f);
+			}
 			else
 				temp.setSuperScript(s);
 			this.selAtom = e;
@@ -939,7 +993,7 @@ public class TreeEditor
 			ScriptsAtom s = new ScriptsAtom(selAtom, null, e);
 			while(i != j)
 			{
-				if(selAtom.equals(temp.elements.get(i)))
+				if(at.equals(temp.elements.get(i)))
 				{
 					temp.elements.remove(i);
 					break;
@@ -974,7 +1028,12 @@ public class TreeEditor
 			EmptyAtom e = new EmptyAtom(0.5f, 0.5f, 0, 0);
 			FractionAtom f = new FractionAtom(selAtom, e);
 			if(selAtom.equals(temp.getBase()))
-				temp.setBase(f);
+			{
+				TeXFormula temp2 = new TeXFormula("\\left(\\right)"); 
+				FencedAtom fo = (FencedAtom) temp2.getRoot();
+				fo.setBase(f);
+				temp.setBase(fo);
+			}
 			else
 				temp.setSuperScript(f);
 			this.selAtom = e;
@@ -1126,7 +1185,12 @@ public class TreeEditor
 					RowAtom temp = new RowAtom(selAtom);
 					temp.add(root);
 					if(selAtom.equals(s.getBase()))
-						s.setBase(temp);
+					{
+						TeXFormula temp2 = new TeXFormula("\\left(\\right)"); 
+						FencedAtom f = (FencedAtom) temp2.getRoot();
+						f.setBase(temp);
+						s.setBase(f);
+					}
 					else
 						s.setSuperScript(temp);
 				}
@@ -1239,7 +1303,12 @@ public class TreeEditor
 				NthRoot n = new NthRoot(e, null);
 				ScriptsAtom temp = (ScriptsAtom) treeParent;
 				if(selAtom.equals(temp.getBase()))
-					temp.setBase(n);
+				{
+					TeXFormula temp2 = new TeXFormula("\\left(\\right)"); 
+					FencedAtom f = (FencedAtom) temp2.getRoot();
+					f.setBase(n);
+					temp.setBase(f);
+				}
 				else
 					temp.setSuperScript(n);
 				this.selAtom = e;

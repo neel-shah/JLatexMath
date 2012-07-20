@@ -175,9 +175,9 @@ public class FencedAtom extends Atom {
     public void setArrowRelation()
     {
     	this.setSubExpr(base);
-    	base.setNextSibling(this);
-    	base.setPrevSibling(this);
-    	base.setParent(this);
+    	base.setNextSibling(this.getNextSibling());
+    	base.setPrevSibling(this.getPrevSibling());
+    	base.setParent(this.getParent());
     }
     
 	@Override
@@ -249,6 +249,11 @@ public class FencedAtom extends Atom {
 	public void setBase(Atom at)
 	{
 		this.base = at;
+	}
+	
+	public Atom getBase()
+	{
+		return this.base;
 	}
 	
 }
