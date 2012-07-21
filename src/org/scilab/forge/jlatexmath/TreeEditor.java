@@ -66,6 +66,8 @@ public class TreeEditor
 						this.commandWritten(value);
 				}
 		}
+		this.setRootRelations();
+		
 	}
 	
 	public void keyPressed(TeXFormula formula, int n, KeyEvent event)
@@ -245,6 +247,7 @@ public class TreeEditor
 		default :
 			return;
 		}
+		this.setRootRelations();
 	}
 	
 	public void formulaClicked(double x, double y, TeXEnvironment te)
@@ -1755,5 +1758,11 @@ public class TreeEditor
 	public void initFormula(TeXFormula formula)
 	{
 		this.formula = formula;
+	}
+	
+	public void setRootRelations()
+	{
+		formula.getRoot().setNextSibling(formula.getRoot().getSubExpr());
+		formula.getRoot().setPrevSibling(formula.getRoot().getSubExpr());
 	}
 }
