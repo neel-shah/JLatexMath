@@ -65,6 +65,7 @@ public class EmptyAtom extends Atom {
  
     public Box createBox(TeXEnvironment env) 
     {
+    	TreeEditor.addAtoms(this);
     	usedBox = new StrutBox(height, width, depth, shift);
     	return usedBox;
     }

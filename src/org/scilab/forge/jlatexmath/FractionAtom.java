@@ -186,6 +186,7 @@ public class FractionAtom extends Atom {
     }
     
     public Box createBox(TeXEnvironment env) {
+    	TreeEditor.addAtoms(this);
     	this.setTreeRelation();
     	this.setArrowRelation();
         TeXFont tf = env.getTeXFont();

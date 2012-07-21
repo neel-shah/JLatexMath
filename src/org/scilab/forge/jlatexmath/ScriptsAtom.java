@@ -70,6 +70,7 @@ public class ScriptsAtom extends Atom {
     }
     
     public Box createBox(TeXEnvironment env) {
+    	TreeEditor.addAtoms(this);
     	this.setTreeRelations();
     	this.setArrowRelations();
 	Box b = (base == null ? new StrutBox(0, 0, 0, 0) : base.createBox(env));

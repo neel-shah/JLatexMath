@@ -8,6 +8,8 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.AffineTransform;
@@ -33,7 +35,7 @@ public class myView extends JPanel implements java.util.Observer
 	int size = 18;
 	JTextField text = null;
 	private Box box = null;
-	private TeXEnvironment te = new TeXEnvironment(TeXConstants.STYLE_DISPLAY, new DefaultTeXFont(size));
+	TeXEnvironment te = new TeXEnvironment(TeXConstants.STYLE_DISPLAY, new DefaultTeXFont(size));
 	private Rectangle currentBox = new Rectangle();
 	private Rectangle rect = null;
 	JFrame frame = null;
@@ -60,6 +62,7 @@ public class myView extends JPanel implements java.util.Observer
 	
 	public void addListener(KeyListener control)
 	{
+		frame.addMouseListener((MouseListener) control);
 		text.addKeyListener(control);
 	}
 
@@ -76,7 +79,6 @@ public class myView extends JPanel implements java.util.Observer
 	
 	public void paintComponent(Graphics g)
 	{
-		//System.out.println("hi in paint");
 		super.paintComponent(g);
 	    rect = new Rectangle(currentBox.x + 178, currentBox.y + 178, currentBox.width + 2, currentBox.height + 2);
 	    Graphics2D g2 = (Graphics2D) g;
@@ -95,5 +97,4 @@ public class myView extends JPanel implements java.util.Observer
 		box.draw(g2, 10, 10);
 		g2.setTransform(oldAt);
 	}
-
 }

@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import org.scilab.forge.jlatexmath.Atom;
+import org.scilab.forge.jlatexmath.TeXEnvironment;
 import org.scilab.forge.jlatexmath.TeXFormula;
 
 public class myModel extends java.util.Observable
@@ -45,8 +46,22 @@ public class myModel extends java.util.Observable
 		this.notifyObservers(rootSel);
 	}
 	
+	public void formulaClicked(double x, double y, TeXEnvironment te)
+	{
+		formula.formulaClicked(x, y, te);
+		Atom root = formula.getRoot();
+		Atom selAtom = formula.treEd.getSelAtm();
+		if(rootSel != null)
+			rootSel.clear();
+		rootSel.add(root);
+		rootSel.add(selAtom);
+		this.setChanged();
+		this.notifyObservers(rootSel);
+	}
+	
 	public void init()
 	{
+		formula.initFormula();
 		Atom root = formula.getRoot();
 		Atom selAtom = formula.getRoot();
 		if(rootSel != null)

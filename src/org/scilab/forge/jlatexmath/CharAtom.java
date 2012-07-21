@@ -64,6 +64,7 @@ public class CharAtom extends CharSymbol {
     }
 
     public Box createBox(TeXEnvironment env) {
+    	TreeEditor.addAtoms(this);
 	if (textStyle == null) {
 	    String ts = env.getTextStyle();
 	    if (ts != null) {

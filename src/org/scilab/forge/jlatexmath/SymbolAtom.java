@@ -171,6 +171,7 @@ public class SymbolAtom extends CharSymbol {
     }
     
     public Box createBox(TeXEnvironment env) {
+    	TreeEditor.addAtoms(this);
         TeXFont tf = env.getTeXFont();
         int style = env.getStyle();
 	Char c = tf.getChar(name, style);

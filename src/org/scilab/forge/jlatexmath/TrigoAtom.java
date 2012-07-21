@@ -24,6 +24,7 @@ public class TrigoAtom extends Atom
 	@Override
 	public Box createBox(TeXEnvironment env)
 	{
+		TreeEditor.addAtoms(this);
 		this.setTreeRelation();
 		this.setArrowRelation();
 		Box a = typed.createBox(env);

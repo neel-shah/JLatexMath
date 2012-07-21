@@ -136,6 +136,7 @@ public class RowAtom extends Atom implements Row {
     }
 
     public Box createBox(TeXEnvironment env) {
+    	TreeEditor.addAtoms(this);
     	this.setTreeReltion();
     	this.setArrowRelation();
         TeXFont tf = env.getTeXFont();

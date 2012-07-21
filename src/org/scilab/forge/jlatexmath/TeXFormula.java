@@ -860,6 +860,16 @@ public class TeXFormula {
     	treEd.keyPressed(this, keyCode, event);
     }
     
+    public void formulaClicked(double x, double y, TeXEnvironment te)
+    {
+    	treEd.formulaClicked(x, y, te);
+    }
+    
+    public void initFormula()
+    {
+    	treEd.initFormula(this);
+    }
+    
     public Atom getRoot()
     {
     	return root;

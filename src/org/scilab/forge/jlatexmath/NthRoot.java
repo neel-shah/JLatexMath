@@ -60,6 +60,7 @@ public class NthRoot extends Atom {
     }
     
     public Box createBox(TeXEnvironment env) {
+    	TreeEditor.addAtoms(this);
     	this.setTreeRelation();
     	this.setArrowRelation();
 	// first create a simple square root construction

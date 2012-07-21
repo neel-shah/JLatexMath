@@ -1,6 +1,8 @@
 package org.scilab.forge.jlatexmath;
 
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 /**
  * Maintains a structure like MathML to convert JLaTeXMath into WYSIWYG
@@ -17,6 +19,8 @@ public class TreeEditor
 	protected boolean isWritingCommand = false;
 	protected StringBuffer command = new StringBuffer(); 
 	protected KeyEvent event = null;
+	protected static ArrayList<Atom> atoms = new ArrayList<Atom>();
+	protected int size = 18;
 	
 	public void keyTyped(TeXFormula formula, Atom r, char c)
 	{
@@ -241,6 +245,35 @@ public class TreeEditor
 		default :
 			return;
 		}
+	}
+	
+	public void formulaClicked(double x, double y, TeXEnvironment te)
+	{
+		atoms.clear();
+		Box box = formula.getRoot().createBox(te);
+		box.updateRectangle(size, (3/size), (3/size));
+		int j = atoms.size();
+		int i = 0;
+		while(i != j)
+		{
+			Rectangle currentBox = atoms.get(i).getBox().getRectangle(); 
+			Rectangle rect = new Rectangle(currentBox.x + 178, currentBox.y + 178, currentBox.width + 2, currentBox.height + 2);
+			if(rect.contains(x, y))
+				this.selAtom = atoms.get(i);
+			++i;
+		}
+		if(selAtom instanceof FencedAtom)
+		{
+			FencedAtom f = (FencedAtom) selAtom;
+			this.selAtom = f.getBase();
+		}
+		atoms.clear();
+	}
+
+	public static void addAtoms(Atom at)
+	{
+		//System.out.println(at.getClass());
+		atoms.add(at);
 	}
 	
 	public void commandWritten(int value)
@@ -1717,5 +1750,10 @@ public class TreeEditor
 	public Atom getSelAtm()
 	{
 		return selAtom;
+	}
+	
+	public void initFormula(TeXFormula formula)
+	{
+		this.formula = formula;
 	}
 }
